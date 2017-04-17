@@ -1,0 +1,11 @@
+# OS X
+.DS_Store
+
+# Project Files
+account.js
+
+# modules
+/node_modules
+
+# bundles
+bundle.js

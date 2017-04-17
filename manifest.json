@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "SyncMarks",
+  "version": "1.0",
+  "description": "An extension for selectively syncing chrome bookmarks",
+  "icons": {
+    "16": "./icns/SyncMarks-Icon-16.png",
+    "48": "./icns/SyncMarks-Icon-48.png",
+    "128": "./icns/SyncMarks-Icon-128.png"
+  },
+  "browser_action": {
+    "default_icon": "./icns/SyncMarks-Icon-16.png",
+    "default_popup": "./popup/index.html"
+  },
+  "permissions": [
+    "activeTab",
+    "bookmarks",
+    "storage",
+    "https://www.gstatic.com/firebasejs/3.7.1/*"
+  ],
+  "content_security_policy": "script-src 'self' https://www.gstatic.com/; object-src 'self'",
+  "background": {
+    "page": "./background/index.html",
+    "persistent": true
+  }
+}

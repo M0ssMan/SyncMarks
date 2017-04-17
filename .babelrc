@@ -1,0 +1,16 @@
+{
+  "presets": [
+    "es2015",
+    "stage-3",
+    "flow"
+  ],
+  "sourceMaps": true,
+  "plugins": [
+    ["module-resolver", {
+      "alias": {
+        "test": "./test",
+        "utils": "./src/utils"
+      }
+      }]
+  ]
+}

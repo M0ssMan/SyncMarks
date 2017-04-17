@@ -1,0 +1,20 @@
+{
+"extends": ["airbnb-base", "plugin:flowtype/recommended"],
+"parser": "babel-eslint",
+"plugins": [
+  "flowtype"
+],
+"rules": {
+  "max-len": ["warn", 100],
+  "comma-dangle": ["error", "never"],
+  "import/prefer-default-export": "off",
+  "import/no-extraneous-dependencies": "off",
+  "quotes": "off",
+  "quote-props": ["error", "consistent"]
+},
+"settings": {
+  "import/resolver": {
+    "babel-module": {}
+    }
+  }
+}
