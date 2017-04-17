@@ -1,0 +1,19 @@
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 5;
+}
+
+li {
+  padding: 5px;
+  margin: 5px;
+  font-size: 13pt;
+}
+
+li:hover {
+  background-color: powderblue;
+}
+
+.popup-container {
+  width: max-content;
+}
