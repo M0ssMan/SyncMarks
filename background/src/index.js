@@ -1,16 +1,18 @@
 /* global chrome window */
-import { isEmpty, isNil } from 'lodash';
+import { isNil } from 'lodash';
+import fb from './db';
 // import { mapToStdOutput } from './utils';
 //
 // let localChromeBookmarks;
 // let syncMarks;
-
+const shared = {};
+shared.fb = fb;
 console.log('im in the background page!');
 
 chrome.storage.local.get('syncProfile', (storageItem) => {
   console.log('storageItem', storageItem);
-  window.profileToSync = storageItem.profileToSync;
-  if (!isNil(storageItem.profileToSync)) {
+  shared.syncProfile = storageItem.syncProfile;
+  if (!isNil(storageItem.syncProfile)) {
     // check if local is synced with db
     // chrome.tabs.create({ url: 'profiles/index.html' })
   }
@@ -44,3 +46,4 @@ chrome.storage.local.get('syncProfile', (storageItem) => {
 // function pullFromDb() {
 //   // to do
 // }
+window.shared = shared;
