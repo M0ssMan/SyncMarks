@@ -6,14 +6,13 @@ const {
   // syncProfile,
   // pushToDb,
   // pullFromDb,
-  profileToSync
-} = chrome.extension.getBackgroundPage();
+  syncProfile
+} = chrome.extension.getBackgroundPage().shared;
 
 $(document).ready(() => {
-  const hasLinkedProfile = !isNil(profileToSync);
-  console.log('document has loaded');
+  const hasSyncProfile = !isNil(syncProfile);
   let clickHandlers;
-  if (hasLinkedProfile) {
+  if (hasSyncProfile) {
     clickHandlers = {
       profile: () => console.log('profile was clicked'),
       sync: () => console.log('sync was clicked'),
@@ -30,9 +29,11 @@ $(document).ready(() => {
       </ul>
     `);
   }
-  if (!hasLinkedProfile) {
+  if (!hasSyncProfile) {
     clickHandlers = {
-      getStarted: () => console.log('get Started was pressed')
+      getStarted: () => {
+        chrome.tabs.create({ url: "../profiles/index.html" });
+      }
     };
 
     $(".popup-container").append(/* @html */`

@@ -1,7 +1,8 @@
 module.exports = {
   entry: {
     "./popup/bundle": "./popup/src/index.js",
-    "./background/bundle": "./background/src/index.js"
+    "./background/bundle": "./background/src/index.js",
+    "./profiles/bundle": "./profiles/src/index.js"
   },
   output: {
     path: __dirname,

@@ -1,0 +1,81 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+div {
+  display: flex;
+}
+
+#container {
+  height: 100%;
+  background-color: lightgray;
+  justify-content: center;
+  align-items: center;
+}
+
+#profiles-container {
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  padding-right: 10px;
+}
+
+#profile-option {
+  flex-direction: column;
+  height: 10vw;
+  width: 10vw;
+  background-color: lightgrey;
+  margin: 10px 0px 10px 10px;
+}
+
+#add-image {
+  flex: 3;
+  background: transparent url("../icns/add.png") no-repeat center;
+  background-size: contain;
+}
+
+#text-box {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+#profile {
+  height: 10vw;
+  width: 10vw;
+  background-color: purple;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0px 10px 10px;
+}
+
+#laptop-image {
+  flex: 3;
+  background: transparent url("../icns/laptop.png") no-repeat center;
+  background-size: contain;
+}
+
+#home-image {
+  flex: 3;
+  margin: 1.5vh 1.5vw;
+  background: transparent url("../icns/home.png") no-repeat center;
+  background-size: contain;
+}
+
+#work-image {
+  flex: 3;
+  margin: 1.5vh 1.5vw;
+  background: transparent url("../icns/work.png") no-repeat center;
+  background-size: contain;
+}
+
+#mobile-image {
+  flex: 3;
+  margin: 1.5vh 1.5vw;
+  background: transparent url("../icns/mobile.png") no-repeat center;
+  background-size: contain;
+}
