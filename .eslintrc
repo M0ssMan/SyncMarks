@@ -10,7 +10,10 @@
   "import/prefer-default-export": "off",
   "import/no-extraneous-dependencies": "off",
   "quotes": "off",
-  "quote-props": ["error", "consistent"]
+  "quote-props": ["error", "consistent"],
+  "no-param-reassign": ["error", { "props": false }],
+  "brace-style": ["error", "stroustrup"],
+  "arrow-parens": ["error", "as-needed"]
 },
 "settings": {
   "import/resolver": {
