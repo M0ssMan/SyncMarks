@@ -3,6 +3,7 @@
 
 # Project Files
 account.js
+config.js
 
 # modules
 /node_modules
