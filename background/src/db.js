@@ -1,4 +1,5 @@
 /* global firebase */
+import { isNil } from 'lodash';
 import { ACCOUNT } from './account';
 import { CONFIG } from './config';
 
@@ -12,7 +13,27 @@ firebase.auth().signInWithEmailAndPassword(ACCOUNT.email, ACCOUNT.password)
   .then(() => db.ref('/initialized').once('value'))
   .then(snapshot => {
     const isInitialized = snapshot.val();
-    console.log('isInitialized', isInitialized);
+    if (isNil(isInitialized)) {
+      return db.ref().update({
+        initialized: true,
+        bookmarks: true,
+        profiles: {
+          home: {
+            text: 'Home'
+          },
+          work: {
+            text: 'Work'
+          },
+          laptop: {
+            text: 'Laptop'
+          },
+          mobile: {
+            text: 'Mobile'
+          }
+        }
+      });
+    }
+    return;
   })
   .catch(err => {
     console.error(err);

@@ -1,14 +1,15 @@
 /* global chrome window */
 import { isNil } from 'lodash';
 import fb from './db';
-// import { mapToStdOutput } from './utils';
-//
-// let localChromeBookmarks;
-// let syncMarks;
-const shared = {};
-shared.fb = fb;
-console.log('im in the background page!');
+import {
+  mapToStdOutput,
+  mapToChromeOutput,
+  check
+} from './utils';
 
+console.log('im in the background page!');
+const shared = {};
+/* eslint-disable arrow-parens */
 chrome.storage.local.get('syncProfile', (storageItem) => {
   console.log('storageItem', storageItem);
   shared.syncProfile = storageItem.syncProfile;
@@ -17,6 +18,7 @@ chrome.storage.local.get('syncProfile', (storageItem) => {
     // chrome.tabs.create({ url: 'profiles/index.html' })
   }
 });
+/* eslint-enable arrow-parens */
 
 // chrome.bookmarks.getTree((bkTree) => {
 //   console.log('bookmark tree', bkTree);
@@ -38,12 +40,22 @@ chrome.storage.local.get('syncProfile', (storageItem) => {
 //   // to do
 // }
 //
-// function pushToDb() {
-//   console.log('pushToDb was executed');
-//   // to do
-// }
-//
-// function pullFromDb() {
-//   // to do
-// }
-window.shared = shared;
+function pushToDb() {
+  fb.getBookmarks()
+    .then(result => {
+      chrome.bookmarks.getTree(chromeTree => {
+        console.log('chromeTree', chromeTree);
+        const syncMarks = mapToStdOutput(chromeTree);
+        console.log('syncMarks', syncMarks);
+      });
+    });
+}
+function getProfiles() {
+  return check(() => fb.getProfiles());
+}
+
+window.shared = {
+  ...shared,
+  getProfiles,
+  pushToDb
+};
