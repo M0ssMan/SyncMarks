@@ -8,8 +8,7 @@
   "plugins": [
     ["module-resolver", {
       "alias": {
-        "test": "./test",
-        "utils": "./src/utils"
+        "flowtypes": "./flowtypes",
       }
       }]
   ]
