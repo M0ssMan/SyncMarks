@@ -24,7 +24,7 @@ div {
   padding-right: 10px;
 }
 
-#profile-option {
+.profile-option {
   flex-direction: column;
   height: 10vw;
   width: 10vw;
@@ -32,50 +32,103 @@ div {
   margin: 10px 0px 10px 10px;
 }
 
-#add-image {
+div.profile-option:hover {
+  background-color: purple;
+}
+
+.selected {
+  background-color: blue;
+}
+
+.add-image {
   flex: 3;
   background: transparent url("../icns/add.png") no-repeat center;
   background-size: contain;
 }
 
-#text-box {
+.text-box {
   flex: 1;
   align-items: center;
   justify-content: center;
 }
 
-#profile {
-  height: 10vw;
-  width: 10vw;
-  background-color: purple;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0px 10px 10px;
-}
-
-#laptop-image {
+.laptop-image {
   flex: 3;
   background: transparent url("../icns/laptop.png") no-repeat center;
   background-size: contain;
 }
 
-#home-image {
+.home-image {
   flex: 3;
   margin: 1.5vh 1.5vw;
   background: transparent url("../icns/home.png") no-repeat center;
   background-size: contain;
 }
 
-#work-image {
+.work-image {
   flex: 3;
   margin: 1.5vh 1.5vw;
   background: transparent url("../icns/work.png") no-repeat center;
   background-size: contain;
 }
 
-#mobile-image {
+.mobile-image {
   flex: 3;
   margin: 1.5vh 1.5vw;
   background: transparent url("../icns/mobile.png") no-repeat center;
+  background-size: contain;
+}
+
+.sync-options-container {
+  flex-direction: column;
+  height: 50vh;
+  width: 35vw;
+  background-color: red;
+}
+
+.sync-option-push {
+  flex: 1;
+  background-color: purple;
+}
+
+.sync-option-pull {
+  flex: 1;
+  background-color: green;
+}
+
+.sync-option-exchange {
+  flex: 1;
+  background-color: black;
+}
+
+.bookmark-image {
+  flex: 1;
+  margin: 1vh 0;
+  background: transparent url("../icns/file-bookmark-icon.png") no-repeat center;
+  background-size: contain;
+}
+
+.cloud-image {
+  flex: 1;
+  margin: 1vh 0.75vw;
+  background: transparent url("../icns/cloud-icon.png") no-repeat center;
+  background-size: contain;
+}
+
+.sync-image-exchange {
+  flex: 1;
+  background: transparent url("../icns/exchange.png") no-repeat center;
+  background-size: contain;
+}
+
+.sync-image-pull {
+  flex: 1;
+  background: transparent url("../icns/left-big-arrow.png") no-repeat center;
+  background-size: contain;
+}
+
+.sync-image-push {
+  flex: 1;
+  background: transparent url("../icns/right-big-arrow.png") no-repeat center;
   background-size: contain;
 }
