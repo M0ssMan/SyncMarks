@@ -48,7 +48,8 @@ const fbMethods = {
     });
   },
   getBookmarks() {
-    // @TODO
+    return db.ref('/bookmarks').once('value')
+      .then(snapshot => snapshot.val());
   },
   setBookmarks() {
     // @TODO

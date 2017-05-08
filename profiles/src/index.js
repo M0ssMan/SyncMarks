@@ -1,17 +1,23 @@
 /* global chrome document $ vex */
-// @flow
+/* @flow */
 
 import { isNil, capitalize, map } from 'lodash';
 import type { profileTypes } from 'flowtypes';
 
-const { getProfiles, pushToDb } =
-chrome.extension.getBackgroundPage().shared;
-const syncProfile = 'home';
+const {
+  getProfiles,
+  getActiveProfile,
+  pushToDb,
+  syncBookmarks
+} = chrome.extension.getBackgroundPage().shared;
+const activeProfile = getActiveProfile();
+
+// const syncProfile = 'home';
 
 function displaySyncOptions(syncOptions) {
   const vexModal = vex.dialog.alert();
   const $syncElements = syncOptions.map(option => {
-    const isSelected = option === syncProfile ? 'selected' : '';
+    const isSelected = option === activeProfile ? 'selected' : '';
     const syncOption = `sync-option-${option}`;
     const syncImage = `sync-image-${option}`;
     return /* @html */`
@@ -53,9 +59,9 @@ $(document).ready(() => {
   let vexSyncModal;
   let vexWarnModal;
 
-  $(document).on("click", ".profile-option", () => {
-    if (isNil(syncProfile)) {
-      // vexSyncModal = displaySyncOptions(syncOptions);
+  $(document).on('click', '.profile-option', () => {
+    if (activeProfile === 'NO_PROFILE') {
+      vexSyncModal = displaySyncOptions(syncOptions);
     }
     else {
       vexWarnModal = displaySyncWarn();
@@ -67,6 +73,9 @@ $(document).ready(() => {
       vexSyncModal.close();
       console.log(`${syncOption} option was chosen`);
       switch (syncOption) {
+        case 'exchange':
+          syncBookmarks();
+          break;
         case 'push':
           pushToDb();
           break;
@@ -90,8 +99,9 @@ $(document).ready(() => {
           </div>
         `;
       });
+      console.log('activeProfile', activeProfile);
       $("#profiles-container").append(profileOptions);
-      $(`.text-box > p:contains(${capitalize(syncProfile)})`)
+      $(`.text-box > p:contains(${capitalize(activeProfile)})`)
         .closest('.profile-option')
         .attr('class', 'profile-option selected');
     })
