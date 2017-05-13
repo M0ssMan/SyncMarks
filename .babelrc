@@ -9,6 +9,7 @@
     ["module-resolver", {
       "alias": {
         "flowtypes": "./flowtypes",
+        "utils": "./utils"
       }
     }],
     ["transform-runtime", {
