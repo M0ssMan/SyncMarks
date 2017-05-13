@@ -10,6 +10,11 @@
       "alias": {
         "flowtypes": "./flowtypes",
       }
-      }]
+    }],
+    ["transform-runtime", {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true,
+    }]
   ]
 }
