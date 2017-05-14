@@ -1,15 +1,11 @@
 /* global chrome window */
-import fb from './db';
 import {
-  mapToStdOutput,
-  check
-} from './utils';
+  errorHandleWrapper,
+  mapToStdOutput
+} from 'utils';
+import fb from './db';
 
 console.log('im in the background page!');
-
-function getProfiles() {
-  return check(() => fb.getProfiles());
-}
 
 function getChromeProfile() {
   return new Promise((success, fail) => {
@@ -37,43 +33,56 @@ function setChromeProfile(value) {
   });
 }
 
-function getClientProfile() {
-  return getChromeProfile()
-    .catch(err => {
-      console.error(err);
-      throw err;
+function getChromeBookmarks() {
+  return new Promise((success, fail) => {
+    chrome.bookmarks.getTree(bookmarkTree => {
+      if (chrome.runtime.lastError) {
+        fail(chrome.runtime.lasterror);
+        return;
+      }
+      success(bookmarkTree);
+    });
+  });
+}
+
+function bkSyncBookmarks(syncedProfile) {
+  console.log('syncedProfile', syncedProfile);
+  const promises = [];
+  promises.push(getChromeBookmarks());
+  promises.push(fb.getBookmarks());
+  return Promise.all(promises)
+    .then(result => {
+      const chromeTree = result[0];
+      console.log('chromeTree', chromeTree);
+      const normalizedChromeTree = mapToStdOutput(chromeTree, syncedProfile);
+      const dbTree = result[1];
+      if (dbTree === false) {
+        console.log('calling set bookmarks');
+        fb.setBookmarks(normalizedChromeTree);
+      }
+      else {
+        console.log('dbTree', dbTree);
+        console.log('normalizedChromeTree', normalizedChromeTree);
+      }
     });
 }
 
-function setClientProfile(profileOptionToUpdate) {
-  return setChromeProfile(profileOptionToUpdate)
-    .catch(err => {
-      console.error(err);
-      throw err;
-    });
+function setClientProfile(...args) {
+  return errorHandleWrapper(setChromeProfile, ...args);
 }
 
-const unchecked = {
-  syncBookmarks() {
-    let localChromeBookmarks;
-    let serverBookmarks;
-    chrome.bookmarks.getTree(bkTree => {
-      console.log('bookmark tree', bkTree);
-      localChromeBookmarks = bkTree;
-      const stdChromeBookmarks = mapToStdOutput(localChromeBookmarks);
-      console.log('stdChromeBookmarks', stdChromeBookmarks);
-    });
-    fb.getBookmarks()
-      .then(bookmarksFromDb => {
-        serverBookmarks = bookmarksFromDb;
-        console.log('serverBookmarks', serverBookmarks);
-      });
-  }
-};
-
-function syncBookmarks() {
-  return check(unchecked.syncBookmarks);
+function getClientProfile(...args) {
+  return errorHandleWrapper(getChromeProfile, ...args);
 }
+
+function getProfiles(...args) {
+  return errorHandleWrapper(fb.getProfiles, ...args);
+}
+
+function syncBookmarks(...args) {
+  return errorHandleWrapper(bkSyncBookmarks, ...args);
+}
+
 window.shared = {
   getProfiles,
   getClientProfile,

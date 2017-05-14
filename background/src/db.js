@@ -14,9 +14,10 @@ firebase.auth().signInWithEmailAndPassword(ACCOUNT.email, ACCOUNT.password)
   .then(snapshot => {
     const isInitialized = snapshot.val();
     if (isNil(isInitialized)) {
-      return db.ref().update({
+      console.log('db was initialized');
+      db.ref().update({
         initialized: true,
-        bookmarks: true,
+        bookmarks: false,
         profiles: {
           home: {
             text: 'Home'
@@ -33,7 +34,6 @@ firebase.auth().signInWithEmailAndPassword(ACCOUNT.email, ACCOUNT.password)
         }
       });
     }
-    return;
   })
   .catch(err => {
     console.error(err);
@@ -51,8 +51,9 @@ const fbMethods = {
     return db.ref('/bookmarks').once('value')
       .then(snapshot => snapshot.val());
   },
-  setBookmarks() {
-    // @TODO
+  setBookmarks(treeToUpdate) {
+    console.log('treeToUpdate', treeToUpdate);
+    return db.ref('/bookmarks').set(treeToUpdate)
   }
 };
 
