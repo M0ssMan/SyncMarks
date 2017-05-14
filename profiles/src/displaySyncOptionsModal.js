@@ -1,14 +1,13 @@
 /* global $ vex */
 import { SYNC_OPTIONS } from './constants';
 
-function displaySyncOptionsModal(clientProfile) {
+function displaySyncOptionsModal() {
   const vexModal = vex.dialog.alert();
   const $syncElements = SYNC_OPTIONS.map(option => {
-    const isSelected = option === clientProfile ? 'selected' : '';
     const syncOption = `sync-option-${option}`;
     const syncImage = `sync-image-${option}`;
     return /* @html */`
-      <div class=${syncOption} id=${isSelected}>
+      <div class=${syncOption}>
         <div class="bookmark-image"></div>
         <div class=${syncImage}></div>
         <div class="cloud-image"></div>
@@ -23,7 +22,6 @@ function displaySyncOptionsModal(clientProfile) {
     $($syncContainer).append($syncElements)
   );
   const $buttons = $('.vex-dialog-buttons').detach();
-  console.log('$buttons', $buttons);
   return vexModal;
 }
 

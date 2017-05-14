@@ -1,7 +1,8 @@
 /* global chrome document $ vex */
 /* @flow */
 
-import { isNil, capitalize, map } from 'lodash';
+import { capitalize, map } from 'lodash';
+import { notNil } from 'utils';
 import type { profiles_Type } from 'flowtypes';
 import setProfileClickHandlers from './setProfileClickHandlers';
 import setSyncOptionClickhandlers from './setSyncOptionClickHandlers';
@@ -9,12 +10,29 @@ import setSyncOptionClickhandlers from './setSyncOptionClickHandlers';
 const {
   getProfiles,
   getClientProfile,
-  setClientProfile,
-  pushToDb,
-  syncBookmarks
+  setClientProfile
 } = chrome.extension.getBackgroundPage().shared;
+
 let clientProfile;
 let vexSyncModal;
+
+function getCurrentProfile() {
+  return getClientProfile()
+    .then(currentProfile => {
+      clientProfile = currentProfile;
+    });
+}
+
+function getCurrentSelectedProfile() {
+  return clientProfile;
+}
+
+function setCurrentProfile(profileOptionToUpdate) {
+  return setClientProfile(profileOptionToUpdate)
+    .then(currentProfile => {
+      clientProfile = currentProfile;
+    });
+}
 
 function closeSyncModal() {
   vexSyncModal.close();
@@ -24,13 +42,22 @@ function setSyncModal(modal) {
   vexSyncModal = modal;
 }
 
+function highlightSelectedProfile(selectedProfile) {
+  if (notNil(selectedProfile)) {
+    $('.selected').removeClass('selected');
+    $(`.text-box > p:contains(${capitalize(selectedProfile)})`)
+    .closest('.profile-option')
+    .attr('class', 'profile-option selected');
+  }
+}
+
 async function initProfileScene() {
   vex.defaultOptions.className = 'vex-theme-modified-os';
-  clientProfile = await getClientProfile();
+  await getCurrentProfile();
 
-  setProfileClickHandlers(clientProfile);
+  setProfileClickHandlers();
   setSyncOptionClickhandlers();
-  const profiles: object<profiles_Type> = await getProfiles();
+  const profiles: Object<profiles_Type> = await getProfiles();
   const profileOptions = map(profiles, (profileValue, profileKey) => {
     const optionId = `${profileKey}-image`;
     return /* @html */`
@@ -44,13 +71,17 @@ async function initProfileScene() {
     `;
   });
   $("#profiles-container").append(profileOptions);
-  $(`.text-box > p:contains(${capitalize(clientProfile)})`)
-    .closest('.profile-option')
-    .attr('class', 'profile-option selected');
+  highlightSelectedProfile(clientProfile);
 }
 
 $(document).ready(() => {
   initProfileScene();
 });
 
-export { closeSyncModal, setSyncModal };
+export {
+  closeSyncModal,
+  setSyncModal,
+  setCurrentProfile,
+  getCurrentSelectedProfile,
+  highlightSelectedProfile
+};
