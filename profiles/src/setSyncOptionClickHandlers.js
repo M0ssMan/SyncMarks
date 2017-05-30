@@ -1,6 +1,6 @@
 /* global $ document chrome */
 import { SYNC_OPTIONS } from './constants';
-import { closeSyncModal, getCurrentSelectedProfile } from './index';
+import { closeSyncModal } from './index';
 
 const {
   syncBookmarks
@@ -10,13 +10,12 @@ function setSyncOptionClickHandlers() {
   SYNC_OPTIONS.forEach(syncOption => {
     $(document).on('click', `.sync-option-${syncOption}`, () => {
       closeSyncModal();
-      const currentProfile = getCurrentSelectedProfile();
 
       console.log(`${syncOption} option was chosen`);
       switch (syncOption) {
         case 'exchange':
           console.log('exchange was called');
-          syncBookmarks(currentProfile);
+          syncBookmarks();
           break;
         case 'push':
           // TODO

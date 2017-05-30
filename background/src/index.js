@@ -6,6 +6,7 @@ import {
 import fb from './db';
 
 console.log('im in the background page!');
+let chromeProfile;
 
 function getChromeProfile() {
   return new Promise((success, fail) => {
@@ -28,6 +29,7 @@ function setChromeProfile(value) {
         fail(chrome.runtime.lastError);
         return;
       }
+      chromeProfile = value;
       success(value);
     });
   });
@@ -45,7 +47,7 @@ function getChromeBookmarks() {
   });
 }
 
-function bkSyncBookmarks(syncedProfile) {
+function sync(syncedProfile, syncOption) {
   console.log('syncedProfile', syncedProfile);
   const promises = [];
   promises.push(getChromeBookmarks());
@@ -53,16 +55,23 @@ function bkSyncBookmarks(syncedProfile) {
   return Promise.all(promises)
     .then(result => {
       const chromeTree = result[0];
-      console.log('chromeTree', chromeTree);
-      const normalizedChromeTree = mapToStdOutput(chromeTree, syncedProfile);
+      const normalizedChromeTree = mapToStdOutput(chromeTree[0].children, syncedProfile);
       const dbTree = result[1];
-      if (dbTree === false) {
-        console.log('calling set bookmarks');
-        fb.setBookmarks(normalizedChromeTree);
-      }
-      else {
-        console.log('dbTree', dbTree);
-        console.log('normalizedChromeTree', normalizedChromeTree);
+      switch (syncOption) {
+        case 'exchange':
+          if (dbTree === false) {
+            console.log('calling set bookmarks');
+            fb.setBookmarks(normalizedChromeTree);
+          }
+          else {
+            console.log('dbTree', dbTree);
+            console.log('normalizedChromeTree', normalizedChromeTree);
+          }
+          break;
+
+        case 'push':
+          fb.setBookmarks(normalizedChromeTree);
+          break;
       }
     });
 }
@@ -71,21 +80,31 @@ function setClientProfile(...args) {
   return errorHandleWrapper(setChromeProfile, ...args);
 }
 
-function getClientProfile(...args) {
-  return errorHandleWrapper(getChromeProfile, ...args);
+function getClientProfile() {
+  return chromeProfile;
 }
 
 function getProfiles(...args) {
   return errorHandleWrapper(fb.getProfiles, ...args);
 }
 
-function syncBookmarks(...args) {
-  return errorHandleWrapper(bkSyncBookmarks, ...args);
+function getRemoteBookmarks(...args) {
+  return errorHandleWrapper(fb.getBookmarks, ...args);
 }
+
+function syncBookmarks(...args) {
+  return errorHandleWrapper(sync, ...args);
+}
+
+getChromeProfile()
+  .then(currentProfile => {
+    chromeProfile = currentProfile;
+  });
 
 window.shared = {
   getProfiles,
   getClientProfile,
   setClientProfile,
+  getRemoteBookmarks,
   syncBookmarks
 };

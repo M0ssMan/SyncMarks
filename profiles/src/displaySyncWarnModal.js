@@ -1,7 +1,7 @@
 /* global vex chrome */
 
 import displaySyncOptionsModal from './displaySyncOptionsModal';
-import { highlightSelectedProfile, setSyncModal, setCurrentProfile } from './index';
+import { setSyncModal, setCurrentProfile } from './index';
 
 function displaySyncWarnModal(profileOptionToUpdate) {
   vex.dialog.confirm({
@@ -10,14 +10,13 @@ function displaySyncWarnModal(profileOptionToUpdate) {
     'associated with the previously synced profile to be removed.<br />' +
     'Are you sure you want to proceed?',
     callback: (hasConfirmed) => {
-      // @TODO
       if (hasConfirmed) {
-        setCurrentProfile(profileOptionToUpdate);
-        // setClientProfile(profileOptionToUpdate);
-        highlightSelectedProfile(profileOptionToUpdate);
-        const syncModal = displaySyncOptionsModal();
-        setSyncModal(syncModal);
-        // TODO remove all current bookmarks
+        setCurrentProfile(profileOptionToUpdate)
+          .then(() => {
+            const syncModal = displaySyncOptionsModal();
+            setSyncModal(syncModal);
+            // TODO remove all current bookmarks
+          });
       }
     }
   });

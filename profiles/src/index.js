@@ -13,25 +13,21 @@ const {
   setClientProfile
 } = chrome.extension.getBackgroundPage().shared;
 
-let clientProfile;
 let vexSyncModal;
 
-function getCurrentProfile() {
-  return getClientProfile()
-    .then(currentProfile => {
-      clientProfile = currentProfile;
-    });
-}
-
-function getCurrentSelectedProfile() {
-  return clientProfile;
+function highlightSelectedProfile() {
+  const selectedProfile = getClientProfile();
+  if (notNil(selectedProfile)) {
+    $('.selected').removeClass('selected');
+    $(`.text-box > p:contains(${capitalize(selectedProfile)})`)
+    .closest('.profile-option')
+    .attr('class', 'profile-option selected');
+  }
 }
 
 function setCurrentProfile(profileOptionToUpdate) {
   return setClientProfile(profileOptionToUpdate)
-    .then(currentProfile => {
-      clientProfile = currentProfile;
-    });
+    .then(() => highlightSelectedProfile());
 }
 
 function closeSyncModal() {
@@ -42,18 +38,9 @@ function setSyncModal(modal) {
   vexSyncModal = modal;
 }
 
-function highlightSelectedProfile(selectedProfile) {
-  if (notNil(selectedProfile)) {
-    $('.selected').removeClass('selected');
-    $(`.text-box > p:contains(${capitalize(selectedProfile)})`)
-    .closest('.profile-option')
-    .attr('class', 'profile-option selected');
-  }
-}
-
 async function initProfileScene() {
   vex.defaultOptions.className = 'vex-theme-modified-os';
-  await getCurrentProfile();
+  await getClientProfile();
 
   setProfileClickHandlers();
   setSyncOptionClickhandlers();
@@ -71,7 +58,7 @@ async function initProfileScene() {
     `;
   });
   $("#profiles-container").append(profileOptions);
-  highlightSelectedProfile(clientProfile);
+  highlightSelectedProfile();
 }
 
 $(document).ready(() => {
@@ -81,7 +68,6 @@ $(document).ready(() => {
 export {
   closeSyncModal,
   setSyncModal,
-  setCurrentProfile,
-  getCurrentSelectedProfile,
-  highlightSelectedProfile
+  getClientProfile,
+  setCurrentProfile
 };

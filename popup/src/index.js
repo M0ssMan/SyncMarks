@@ -1,27 +1,35 @@
-/* global chrome document $ */
+/* global chrome document $ window */
 
-import { isNil, forOwn } from 'lodash';
+import { forOwn } from 'lodash';
+import { notNil } from 'utils';
 
 const {
-  // syncProfile,
-  // pushToDb,
-  // pullFromDb,
-  syncProfile
+  getClientProfile,
+  syncBookmarks
 } = chrome.extension.getBackgroundPage().shared;
 
-$(document).ready(() => {
-  const hasSyncProfile = !isNil(syncProfile);
+async function initPopup() {
+  const currentProfile = getClientProfile();
+  const hascurrentProfile = notNil(currentProfile);
   let clickHandlers;
-  if (hasSyncProfile) {
+  if (hascurrentProfile) {
     clickHandlers = {
-      profile: () => console.log('profile was clicked'),
+      bookmarks: () => {
+        chrome.tabs.create({ url: "../bookmarks/index.html" });
+      },
+      profile: () => {
+        chrome.tabs.create({ url: "../profiles/index.html" });
+      },
       sync: () => console.log('sync was clicked'),
-      push: () => console.log('push was clicked'),
+      push: () => {
+        console.log('push was clicked');
+      },
       pull: () => console.log('pull was clicked')
     };
 
     $(".popup-container").append(/* @html */`
       <ul>
+        <li id="bookmarks">Bookmarks</li>
         <li id="profile">Profile</li>
         <li id="sync">Sync</li>
         <li id="push">Push Local to Cloud</li>
@@ -29,7 +37,7 @@ $(document).ready(() => {
       </ul>
     `);
   }
-  if (!hasSyncProfile) {
+  if (!hascurrentProfile) {
     clickHandlers = {
       getStarted: () => {
         chrome.tabs.create({ url: "../profiles/index.html" });
@@ -46,4 +54,8 @@ $(document).ready(() => {
   forOwn(clickHandlers, (value, key) => {
     $(`#${key}`).bind("click", value);
   });
+}
+
+$(document).ready(() => {
+  initPopup();
 });
