@@ -15,10 +15,11 @@ function setSyncOptionClickHandlers() {
       switch (syncOption) {
         case 'exchange':
           console.log('exchange was called');
-          syncBookmarks();
+          syncBookmarks('exchange');
           break;
         case 'push':
-          // TODO
+          console.log('push was called');
+          syncBookmarks('push');
           break;
         default:
           // TODO

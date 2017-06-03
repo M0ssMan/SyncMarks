@@ -3,10 +3,11 @@ import {
   errorHandleWrapper,
   mapToStdOutput
 } from 'utils';
-import fb from './db';
+import db from './db';
 
 console.log('im in the background page!');
 let chromeProfile;
+let remoteBookmarks;
 
 function getChromeProfile() {
   return new Promise((success, fail) => {
@@ -47,21 +48,20 @@ function getChromeBookmarks() {
   });
 }
 
-function sync(syncedProfile, syncOption) {
-  console.log('syncedProfile', syncedProfile);
+function sync(syncOption) {
   const promises = [];
   promises.push(getChromeBookmarks());
-  promises.push(fb.getBookmarks());
+  promises.push(db.getBookmarks());
   return Promise.all(promises)
     .then(result => {
       const chromeTree = result[0];
-      const normalizedChromeTree = mapToStdOutput(chromeTree[0].children, syncedProfile);
+      const normalizedChromeTree = mapToStdOutput(chromeTree[0].children, chromeProfile);
       const dbTree = result[1];
       switch (syncOption) {
         case 'exchange':
           if (dbTree === false) {
             console.log('calling set bookmarks');
-            fb.setBookmarks(normalizedChromeTree);
+            db.setBookmarks(normalizedChromeTree);
           }
           else {
             console.log('dbTree', dbTree);
@@ -70,7 +70,11 @@ function sync(syncedProfile, syncOption) {
           break;
 
         case 'push':
-          fb.setBookmarks(normalizedChromeTree);
+          console.log('pushing to db');
+          db.setBookmarks(normalizedChromeTree)
+            .then(cloudBookmarks => {
+              remoteBookmarks = cloudBookmarks;
+            });
           break;
       }
     });
@@ -85,11 +89,11 @@ function getClientProfile() {
 }
 
 function getProfiles(...args) {
-  return errorHandleWrapper(fb.getProfiles, ...args);
+  return errorHandleWrapper(db.getProfiles, ...args);
 }
 
-function getRemoteBookmarks(...args) {
-  return errorHandleWrapper(fb.getBookmarks, ...args);
+function getRemoteBookmarks() {
+  return remoteBookmarks;
 }
 
 function syncBookmarks(...args) {
@@ -100,6 +104,11 @@ getChromeProfile()
   .then(currentProfile => {
     chromeProfile = currentProfile;
   });
+
+db.getBookmarks()
+  .then(bookmarksFromDb => {
+    remoteBookmarks = bookmarksFromDb;
+  })
 
 window.shared = {
   getProfiles,

@@ -47,7 +47,7 @@ async function initProfileScene() {
   const profiles: Object<profiles_Type> = await getProfiles();
   const profileOptions = map(profiles, (profileValue, profileKey) => {
     const optionId = `${profileKey}-image`;
-    return /* @html */`
+    const $profileOption = /* @html */`
       <div class="profile-option">
         <div class=${optionId}>
         </div>
@@ -56,6 +56,7 @@ async function initProfileScene() {
         </div>
       </div>
     `;
+    return $profileOption;
   });
   $("#profiles-container").append(profileOptions);
   highlightSelectedProfile();

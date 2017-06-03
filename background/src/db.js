@@ -4,18 +4,18 @@ import { ACCOUNT } from './account';
 import { CONFIG } from './config';
 
 firebase.initializeApp(CONFIG);
-const db = firebase.database();
+const fb = firebase.database();
 
 firebase.auth().signInWithEmailAndPassword(ACCOUNT.email, ACCOUNT.password)
   .catch(err => {
     console.error('firebase sign in failed', err);
   })
-  .then(() => db.ref('/initialized').once('value'))
+  .then(() => fb.ref('/initialized').once('value'))
   .then(snapshot => {
     const isInitialized = snapshot.val();
     if (isNil(isInitialized)) {
       console.log('db was initialized');
-      db.ref().update({
+      fb.ref().update({
         initialized: true,
         bookmarks: false,
         profiles: {
@@ -39,22 +39,30 @@ firebase.auth().signInWithEmailAndPassword(ACCOUNT.email, ACCOUNT.password)
     console.error(err);
   });
 
+function getProfiles() {
+  return fb.ref('/profiles').once('value')
+  .then(snapshot => {
+    return snapshot.val();
+  })
+  .catch(err => console.error(err));
+}
+
+function getBookmarks() {
+  return fb.ref('/bookmarks').once('value')
+  .then(snapshot => snapshot.val())
+  .catch(err => console.error(err));
+}
+
+function setBookmarks(treeToUpdate) {
+  return fb.ref('/bookmarks').set(treeToUpdate)
+    .then(() => getBookmarks())
+    .catch(err => console.error(err));
+}
+
 const fbMethods = {
-  getProfiles() {
-    return db.ref('/profiles').once('value')
-    .then(snapshot => {
-      console.log('profiles', snapshot.val());
-      return snapshot.val();
-    });
-  },
-  getBookmarks() {
-    return db.ref('/bookmarks').once('value')
-      .then(snapshot => snapshot.val());
-  },
-  setBookmarks(treeToUpdate) {
-    console.log('treeToUpdate', treeToUpdate);
-    return db.ref('/bookmarks').set(treeToUpdate)
-  }
+  getProfiles,
+  getBookmarks,
+  setBookmarks
 };
 
 export default fbMethods;
