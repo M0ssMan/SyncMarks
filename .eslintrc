@@ -14,7 +14,7 @@
   "no-param-reassign": ["error", { "props": false }],
   "brace-style": ["error", "stroustrup"],
   "no-console": ["warn", { allow: ["error"] }],
-  "arrow-parens": ["error", "as-needed"]
+  "arrow-parens": "off"
 },
 "settings": {
   "import/resolver": {
