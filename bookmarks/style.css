@@ -1,0 +1,125 @@
+html, body {
+  /*padding: 0;*/
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.bookmarks {
+  flex-direction: column;
+  height: 100%;
+}
+
+.title {
+  background-color: pink;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.tree-panes {
+  background-color: brown;
+  flex: 1;
+  display: flex;
+}
+
+.folder-pane {
+  flex-direction: column;
+  background-color: purple;
+  overflow: hidden;
+  width: 200px;
+  flex: 0 0 auto;
+}
+
+.folder-title {
+  height: 30px;
+  background-color: gray;
+  border-top: 1px solid black;
+  align-items: center;
+  padding-left: 15px;
+  font-weight: bold;
+}
+
+.folder-tree {
+  flex: 1;
+}
+
+.splitter {
+  width: 15px;
+  background: gray url('../icns/slidergrip.png') center center no-repeat;
+  cursor: col-resize;
+  border-top: 1px solid black;
+  flex: 0 0 auto;
+}
+
+.file-pane {
+  display: flex;
+  flex-direction: column;
+  background-color: yellow;
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.file-title {
+  height: 30px;
+  background-color: gray;
+  border-top: 1px solid black;
+  align-items: center;
+  padding-left: 15px;
+  font-weight: bold;
+}
+
+.file-tree {
+  flex: 1;
+  min-width: 100%;
+  display: inline-block;
+  padding-top: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+  background-color: yellow;
+  box-sizing: border-box;
+}
+
+.custom-container {
+  display: flex !important;
+  padding: 2px 0;
+}
+
+span.fancytree-node:hover .bookmark-url {
+  visibility: visible;
+}
+
+.custom-container .fancytree-title {
+  background-color: red;
+  min-width: 0;
+  display: flex;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.bookmark-title {
+  display: block;
+  margin-right: 15px;
+}
+
+.bookmark-url {
+  display: block;
+  visibility: hidden;
+  background-color: purple;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

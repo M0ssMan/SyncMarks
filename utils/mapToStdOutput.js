@@ -7,7 +7,7 @@ export function mapToStdOutput(treeNode, syncedProfile, fullIndex) {
     element0.syncedTo = { [syncedProfile]: true };
     element0.index = isNil(fullIndex) ? `${index}` : `${fullIndex}.${index}`;
     if (element0.folder) {
-      element0.children = mapToStdOutput(element.children, syncedProfile, element.index);
+      element0.children = mapToStdOutput(element.children, syncedProfile, element0.index);
     }
     acc.push(element0);
     return acc;
