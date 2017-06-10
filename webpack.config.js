@@ -2,6 +2,7 @@ module.exports = {
   entry: {
     "./popup/bundle": "./popup/src/index.js",
     "./background/bundle": "./background/src/index.js",
+    "./bookmarks/bundle": "./bookmarks/src/index.js",
     "./profiles/bundle": "./profiles/src/index.js"
   },
   output: {
