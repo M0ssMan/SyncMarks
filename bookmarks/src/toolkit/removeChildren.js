@@ -1,7 +1,10 @@
+// import { get } from 'lodash';
+// import { notNil } from 'utils';
 import { getNodeByIndex } from './getNodeByIndex';
 
 function filterOutChildren(treeNode) {
-  const WTF = treeNode.children.reduce((acc, node) => {
+  console.log('treeNode', treeNode);
+  const reducedTreeNode = treeNode.children.reduce((acc, node) => {
     if (node.folder) {
       acc.push({
         ...node,
@@ -29,7 +32,7 @@ function filterOutChildren(treeNode) {
     });
     return acc;
   }, []);
-  return WTF;
+  return reducedTreeNode;
 }
 
 export function removeChildren(indexString, tree) {

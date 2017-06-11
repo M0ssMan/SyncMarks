@@ -1,13 +1,12 @@
 /* global window document $ chrome */
 
-import { onlyFolders, removeChildren } from 'utils';
-import { isNil } from 'lodash';
+import { onlyFolders } from './toolkit';
+import { contextMenuConfig } from './contextMenuConfig';
+import { handleFolderClick } from './handleFolderClick';
 
 const {
   getRemoteBookmarks
 } = chrome.extension.getBackgroundPage().shared;
-
-let fileFancyTree;
 
 var test = [
   { title: 'yo', key: '1'},
@@ -26,58 +25,16 @@ var test = [
   }
 ]
 
-function initFileTree(fileTree) {
-  $('.file-tree').fancytree({
-    extensions: ['syncmarks'],
-    source: fileTree
-  });
-}
-
-function displayFolderContents(leafNode, remoteBookmarks) {
-  leafNode.node.setSelected();
-  const shallowTree = removeChildren(leafNode.node.data.index, remoteBookmarks);
-  console.log('only urls', shallowTree);
-  if (isNil(fileFancyTree)) {
-    console.log('file tree is undefined and initiated');
-    initFileTree(shallowTree);
-    fileFancyTree = $('.file-tree').fancytree('getTree');
-    fileFancyTree.visit((node) => {
-      node.addClass('custom-container');
-    });
-    return;
-  }
-  console.log('patching file tree');
-  fileFancyTree = $('.file-tree').fancytree('getTree');
-  fileFancyTree.reload(shallowTree);
-  fileFancyTree.visit((node) => {
-    node.addClass('custom-container');
-  });
-}
-
 function initBookmarksScene() {
   const remoteBookmarks = getRemoteBookmarks();
   console.log('remoteBookmarks', remoteBookmarks);
   const onlyFoldersTree = onlyFolders(remoteBookmarks);
   $('.folder-tree').fancytree({
-    extensions: ['dnd5', 'syncmarks'],
+    extensions: ['dnd5', 'syncmarks', 'contextMenu'],
     source: onlyFoldersTree,
     checkbox: true,
-    click: function (event, leafNode) {
-      console.log('event', event);
-      console.log('leafNode', leafNode);
-      const clickedElement = event.originalEvent.target;
-      if ($(clickedElement).hasClass('fancytree-expander')) {
-        console.log('you clicked the expander');
-        return;
-      }
-      if ($(clickedElement).hasClass('syncmarks-checkbox')) {
-        // TODO add API call
-        console.log('toggling class');
-        $(clickedElement).toggleClass('synced');
-        return;
-      }
-      displayFolderContents(leafNode, remoteBookmarks);
-    },
+    contextMenu: contextMenuConfig,
+    click: handleFolderClick,
     // edit: {
     //   triggerStart: ['shift+click'],
     //   save(event, data) {
@@ -106,10 +63,6 @@ function initBookmarksScene() {
           // }
           console.log('test array', test);
         }
-      },
-      nodeRenderTitle: function(evt, data) {
-        console.log('evt', evt);
-        console.log('data', data);
       }
     }
   });
@@ -145,9 +98,9 @@ function initBookmarksScene() {
           }
           console.log('test array', test);
         }
-      },
-    },
-  })
+      }
+    }
+  });
 }
 
 $(document).ready(() => {
