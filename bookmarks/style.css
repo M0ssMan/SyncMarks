@@ -92,17 +92,17 @@ p {
   box-sizing: border-box;
 }
 
-.custom-container {
+span.fancytree-node {
   display: flex !important;
   padding: 2px 0;
 }
 
-span.fancytree-node:hover .bookmark-url {
+span.fancytree-node:hover .syncmarks-url {
   visibility: visible;
 }
 
-.custom-container .fancytree-title {
-  background-color: red;
+span.fancytree-node .fancytree-title {
+  /*background-color: red;*/
   min-width: 0;
   display: flex;
   flex: 1;
@@ -110,15 +110,21 @@ span.fancytree-node:hover .bookmark-url {
   padding: 0;
 }
 
-.bookmark-title {
+.syncmarks-title {
   display: block;
   margin-right: 15px;
+  /*background-color: red;*/
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.bookmark-url {
+.syncmarks-url {
+  flex: 1;
   display: block;
   visibility: hidden;
-  background-color: purple;
+  color: gray;
+  /*background-color: purple;*/
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;

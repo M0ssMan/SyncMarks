@@ -11,30 +11,23 @@ let fileFancyTree;
 function initFileTree(fileTree) {
   $('.file-tree').fancytree({
     extensions: ['syncmarks'],
-    source: fileTree
+    source: fileTree,
+    syncmarks: {
+      titleAndUrl: true
+    }
   });
 }
 
 function displayFolderContents(folder) {
-  console.log('folder', folder);
   folder.node.setSelected();
   const shallowTree = removeChildren(folder.node.data.index, remoteBookmarks);
-  console.log('only urls', shallowTree);
   if (isNil(fileFancyTree)) {
-    console.log('file tree is undefined and initiated');
     initFileTree(shallowTree);
     fileFancyTree = $('.file-tree').fancytree('getTree');
-    fileFancyTree.visit((node) => {
-      node.addClass('custom-container');
-    });
     return;
   }
-  console.log('patching file tree');
   fileFancyTree = $('.file-tree').fancytree('getTree');
   fileFancyTree.reload(shallowTree);
-  fileFancyTree.visit((node) => {
-    node.addClass('custom-container');
-  });
 }
 
 export function handleFolderClick(event, node) {
