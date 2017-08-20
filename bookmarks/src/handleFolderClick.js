@@ -10,16 +10,22 @@ let fileFancyTree;
 
 function initFileTree(fileTree) {
   $('.file-tree').fancytree({
-    extensions: ['syncmarks'],
+    extensions: ['syncmarks', 'edit'],
     source: fileTree,
     syncmarks: {
       titleAndUrl: true
+    },
+    edit: {
+      save(event, data) {
+        console.log('value', data.input.val());
+        return true;
+      }
     }
   });
 }
 
 function displayFolderContents(folder) {
-  folder.node.setSelected();
+  // folder.node.setSelected();
   const shallowTree = removeChildren(folder.node.data.index, remoteBookmarks);
   if (isNil(fileFancyTree)) {
     initFileTree(shallowTree);
@@ -31,8 +37,8 @@ function displayFolderContents(folder) {
 }
 
 export function handleFolderClick(event, node) {
-  console.log('event', event);
-  console.log('node', node);
+  // console.log('event', event);
+  // console.log('node', node);
   const clickedElement = event.originalEvent.target;
   if ($(clickedElement).hasClass('fancytree-expander')) {
     console.log('you clicked the expander');

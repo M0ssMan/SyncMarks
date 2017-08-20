@@ -8,13 +8,13 @@ const {
   getRemoteBookmarks
 } = chrome.extension.getBackgroundPage().shared;
 
-var test = [
-  { title: 'yo', key: '1'},
-  { title: 'meya', key: '2'},
-  { title: 'captainJack', key: '3'},
+const test = [
+  { title: 'yo', key: '1' },
+  { title: 'meya', key: '2' },
+  { title: 'captainJack', key: '3' },
   { title: 'imaFolder',
     key: '4',
-    folder: true,
+    folder: true
     // unselectable: true,
     // children: [
     //   { title: 'imfucking awesome', key: '4.0'},
@@ -30,18 +30,17 @@ function initBookmarksScene() {
   console.log('remoteBookmarks', remoteBookmarks);
   const onlyFoldersTree = onlyFolders(remoteBookmarks);
   $('.folder-tree').fancytree({
-    extensions: ['dnd5', 'syncmarks', 'contextMenu'],
+    extensions: ['dnd5', 'syncmarks', 'contextMenu', 'edit'],
     source: onlyFoldersTree,
     checkbox: true,
     contextMenu: contextMenuConfig,
     click: handleFolderClick,
-    // edit: {
-    //   triggerStart: ['shift+click'],
-    //   save(event, data) {
-    //     console.log('value', data.input.val());
-    //     return true;
-    //   }
-    // },
+    edit: {
+      save(event, data) {
+        console.log('value', data.input.val());
+        return true;
+      }
+    },
     dnd5: {
       scroll: true,
       preventNonNodes: false,
